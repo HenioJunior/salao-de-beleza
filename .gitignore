@@ -1,3 +1,9 @@
+#Mac File
+.DS_Store
+
+#IntelliJ
+.idea
+
 # Compiled class file
 *.class
 
