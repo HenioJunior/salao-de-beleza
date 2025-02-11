@@ -1,5 +1,6 @@
 package com.heniojunior.salaodebeleza.api.entities;
 
+import com.heniojunior.salaodebeleza.api.enums.TipoProduto;
 import com.heniojunior.salaodebeleza.api.enums.TipoServico;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,31 +8,35 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Servico {
+public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String nome;
     private double valor;
-    private TipoServico tipo;
+    private TipoProduto tipo;
 
-    public Servico(double valor, TipoServico tipo) {
+    public Produto(String nome, double valor, TipoProduto tipo) {
+        this.nome = nome;
         this.valor = valor;
         this.tipo = tipo;
     }
 
-    public Servico() {
+    public Produto() {
 
-    }
-
-    public Servico(Servico servico) {
-        this.valor = servico.getValor();
-        this.tipo = servico.getTipo();
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public double getValor() {
@@ -42,11 +47,11 @@ public class Servico {
         this.valor = valor;
     }
 
-    public TipoServico getTipo() {
+    public TipoProduto getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoServico tipo) {
+    public void setTipo(TipoProduto tipo) {
         this.tipo = tipo;
     }
 }

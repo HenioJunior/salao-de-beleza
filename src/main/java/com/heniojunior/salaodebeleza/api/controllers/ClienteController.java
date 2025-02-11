@@ -1,11 +1,7 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
-import com.heniojunior.salaodebeleza.api.dtos.AgendamentoRequest;
 import com.heniojunior.salaodebeleza.api.dtos.ClienteRequest;
-import com.heniojunior.salaodebeleza.api.entities.Agendamento;
 import com.heniojunior.salaodebeleza.api.entities.Cliente;
-import com.heniojunior.salaodebeleza.api.entities.Profissional;
-import com.heniojunior.salaodebeleza.api.entities.Servico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -57,16 +53,17 @@ public class ClienteController {
     }
 
     @DeleteMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Remove um agendamento existente")
+    @Operation(summary = "Remove um cliente existente")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Agendamento removido com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados inválidos"),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Erro ao remover o agendamento")
+            @ApiResponse(responseCode = "500", description = "Erro ao remover o cliente")
     })
     @Transactional
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        manager.remove(id);
+        Cliente cliente = manager.find(Cliente.class, id);
+        manager.remove(cliente);
         return ResponseEntity.noContent().build();
     }
 

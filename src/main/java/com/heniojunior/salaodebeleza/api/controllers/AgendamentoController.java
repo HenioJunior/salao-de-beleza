@@ -1,6 +1,6 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
-import com.heniojunior.salaodebeleza.api.dtos.AgendamentoRequest;
+import com.heniojunior.salaodebeleza.api.dtos.AgendamentoDto;
 import com.heniojunior.salaodebeleza.api.entities.Agendamento;
 import com.heniojunior.salaodebeleza.api.entities.Cliente;
 import com.heniojunior.salaodebeleza.api.entities.Profissional;
@@ -15,6 +15,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/agendamentos", produces = {"application/json"})
@@ -33,7 +36,7 @@ public class AgendamentoController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o agendamento")
     })
     @Transactional
-    public ResponseEntity<String> novaAgendamento(@RequestBody AgendamentoRequest request) {
+    public ResponseEntity<String> novaAgendamento(@RequestBody AgendamentoDto request) {
         Agendamento agendamento = request.toModel(manager);
         manager.persist(agendamento);
         return ResponseEntity.ok("Agendamento realizado com sucesso.");
@@ -48,11 +51,13 @@ public class AgendamentoController {
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o agendamento")
     })
     @Transactional
-    public ResponseEntity<String> atualizaAgendamento(@PathVariable int id, @RequestBody AgendamentoRequest request) {
+    public ResponseEntity<AgendamentoDto> atualizaAgendamento(@PathVariable long id, @RequestBody AgendamentoDto dto) {
         Agendamento agendamento = manager.find(Agendamento.class, id);
-        copydtoToEntity(request, agendamento);
+        copydtoToEntity(dto, agendamento);
         manager.persist(agendamento);
-        return ResponseEntity.ok("Agendamento atualizado com sucesso.");
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @DeleteMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -65,16 +70,17 @@ public class AgendamentoController {
     })
     @Transactional
     public ResponseEntity<Void> deletaAgendamento(@PathVariable Long id) {
-        manager.remove(id);
+        Agendamento agendamento = manager.find(Agendamento.class, id);
+        manager.remove(agendamento);
         return ResponseEntity.noContent().build();
     }
 
-    private void copydtoToEntity(AgendamentoRequest request, Agendamento agendamento) {
-        Cliente cliente = manager.find(Cliente.class, request.getClienteId());
-        Profissional profissional = manager.find(Profissional.class, request.getProfissionalId());
-        Servico servico = manager.find(Servico.class, request.getServicoId());
+    private void copydtoToEntity(AgendamentoDto dto, Agendamento agendamento) {
+        Cliente cliente = manager.find(Cliente.class, dto.getClienteId());
+        Profissional profissional = manager.find(Profissional.class, dto.getProfissionalId());
+        Servico servico = manager.find(Servico.class, dto.getServicoId());
 
-        agendamento.setHorario(request.getHorario());
+        agendamento.setHorario(dto.getHorario());
         agendamento.setCliente(new Cliente(cliente));
         agendamento.setProfissional(new Profissional(profissional));
         agendamento.setServico(new Servico(servico));
