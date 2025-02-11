@@ -1,6 +1,6 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
-import com.heniojunior.salaodebeleza.api.dtos.ClienteRequest;
+import com.heniojunior.salaodebeleza.api.dtos.ClienteDto;
 import com.heniojunior.salaodebeleza.api.entities.Cliente;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,8 +30,8 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
     @Transactional
-    public ResponseEntity<String> novoCliente(@RequestBody ClienteRequest request) {
-        Cliente cliente = request.toModel();
+    public ResponseEntity<String> novoCliente(@RequestBody ClienteDto dto) {
+        Cliente cliente = dto.toModel();
         manager.persist(cliente);
         return ResponseEntity.ok("Cliente cadastrado com sucesso.");
     }
@@ -45,9 +45,9 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do cliente")
     })
     @Transactional
-    public ResponseEntity<String> atualizaCliente(@PathVariable int id, @RequestBody ClienteRequest request) {
+    public ResponseEntity<String> atualizaCliente(@PathVariable int id, @RequestBody ClienteDto dto) {
         Cliente cliente = manager.find(Cliente.class, id);
-        copydtoToEntity(request, cliente);
+        copydtoToEntity(dto, cliente);
         manager.persist(cliente);
         return ResponseEntity.ok("Agendamento atualizado com sucesso.");
     }
@@ -67,10 +67,10 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    private void copydtoToEntity(ClienteRequest request, Cliente cliente) {
-        cliente.setNome(request.getNome());
-        cliente.setCpf(request.getCpf());
-        cliente.setEmail(request.getEmail());
-        cliente.setTelefone(request.getTelefone());
+    private void copydtoToEntity(ClienteDto dto, Cliente cliente) {
+        cliente.setNome(dto.getNome());
+        cliente.setCpf(dto.getCpf());
+        cliente.setEmail(dto.getEmail());
+        cliente.setTelefone(dto.getTelefone());
     }
 }

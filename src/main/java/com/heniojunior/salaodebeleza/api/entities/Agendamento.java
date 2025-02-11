@@ -13,11 +13,14 @@ public class Agendamento {
     private Long id;
     @JsonFormat(pattern = "dd-MM-yyyy@HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime horario;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
+    @JoinColumn(name="profissional_id")
     private Profissional profissional;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
+    @JoinColumn(name="cliente_id")
     private Cliente cliente;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
+    @JoinColumn(name="servico_id")
     private Servico servico;
 
     public Agendamento(LocalDateTime horario, Profissional profissional, Cliente cliente, Servico servico) {

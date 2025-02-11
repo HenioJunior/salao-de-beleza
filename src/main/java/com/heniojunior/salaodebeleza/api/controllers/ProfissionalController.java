@@ -1,6 +1,6 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
-import com.heniojunior.salaodebeleza.api.dtos.ProfissionalRequest;
+import com.heniojunior.salaodebeleza.api.dtos.ProfissionalDto;
 import com.heniojunior.salaodebeleza.api.entities.Profissional;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,8 +30,8 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
     @Transactional
-    public ResponseEntity<String> novoprofissional(@RequestBody ProfissionalRequest request) {
-        Profissional profissional = request.toModel();
+    public ResponseEntity<String> novoprofissional(@RequestBody ProfissionalDto dto) {
+        Profissional profissional = dto.toModel();
         manager.persist(profissional);
         return ResponseEntity.ok("Profissional cadastrado com sucesso.");
     }
@@ -45,9 +45,9 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do profissional")
     })
     @Transactional
-    public ResponseEntity<String> atualizaprofissional(@PathVariable int id, @RequestBody ProfissionalRequest request) {
+    public ResponseEntity<String> atualizaprofissional(@PathVariable int id, @RequestBody ProfissionalDto dto) {
         Profissional profissional = manager.find(Profissional.class, id);
-        copydtoToEntity(request, profissional);
+        copydtoToEntity(dto, profissional);
         manager.persist(profissional);
         return ResponseEntity.ok("Agendamento atualizado com sucesso.");
     }
@@ -67,10 +67,10 @@ public class ProfissionalController {
         return ResponseEntity.noContent().build();
     }
 
-    private void copydtoToEntity(ProfissionalRequest request, Profissional profissional) {
-        profissional.setNome(request.getNome());
-        profissional.setCpf(request.getCpf());
-        profissional.setEmail(request.getEmail());
-        profissional.setTelefone(request.getTelefone());
+    private void copydtoToEntity(ProfissionalDto dto, Profissional profissional) {
+        profissional.setNome(dto.getNome());
+        profissional.setCpf(dto.getCpf());
+        profissional.setEmail(dto.getEmail());
+        profissional.setTelefone(dto.getTelefone());
     }
 }

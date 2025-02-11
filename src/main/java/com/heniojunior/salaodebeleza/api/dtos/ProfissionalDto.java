@@ -2,25 +2,25 @@ package com.heniojunior.salaodebeleza.api.dtos;
 
 import com.heniojunior.salaodebeleza.api.entities.Profissional;
 
-public class ProfissionalRequest {
+public class ProfissionalDto {
 
     private String nome;
     private String cpf;
     private String email;
     private String telefone;
 
-    public ProfissionalRequest(String nome, String cpf, String email, String telefone) {
+    public ProfissionalDto(String nome, String cpf, String email, String telefone) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
     }
 
-    public ProfissionalRequest() {
+    public ProfissionalDto() {
 
     }
 
-    public ProfissionalRequest(ProfissionalRequest profissional) {
+    public ProfissionalDto(ProfissionalDto profissional) {
         this.nome = profissional.getNome();
         this.cpf = profissional.getCpf();
         this.email = profissional.getEmail();

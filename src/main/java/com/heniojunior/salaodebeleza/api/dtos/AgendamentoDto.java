@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 public class AgendamentoDto {
 
-    private long id;
     @JsonFormat(pattern = "dd-MM-yyyy@HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime horario;
     private long profissionalId;
@@ -23,10 +22,6 @@ public class AgendamentoDto {
         this.profissionalId = profissionalId;
         this.clienteId = clienteId;
         this.servicoId = servicoId;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public LocalDateTime getHorario() {

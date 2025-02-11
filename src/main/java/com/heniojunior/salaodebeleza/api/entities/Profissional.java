@@ -29,6 +29,7 @@ public class Profissional {
     }
 
     public Profissional(Profissional profissional) {
+        this.id = profissional.id;
         this.nome = profissional.getNome();
         this.cpf = profissional.getCpf();
         this.email = profissional.getEmail();

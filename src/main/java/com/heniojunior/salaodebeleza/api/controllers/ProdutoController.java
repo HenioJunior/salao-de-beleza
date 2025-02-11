@@ -1,9 +1,7 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
 import com.heniojunior.salaodebeleza.api.dtos.ProdutoDto;
-import com.heniojunior.salaodebeleza.api.dtos.ServicoRequest;
 import com.heniojunior.salaodebeleza.api.entities.Produto;
-import com.heniojunior.salaodebeleza.api.entities.Servico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

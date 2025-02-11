@@ -26,6 +26,7 @@ public class Servico {
     }
 
     public Servico(Servico servico) {
+        this.id = servico.id;
         this.valor = servico.getValor();
         this.tipo = servico.getTipo();
     }

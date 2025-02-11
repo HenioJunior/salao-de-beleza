@@ -56,7 +56,7 @@ public class AgendamentoController {
         copydtoToEntity(dto, agendamento);
         manager.persist(agendamento);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(dto.getId()).toUri();
+                .buildAndExpand(id).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
@@ -76,13 +76,11 @@ public class AgendamentoController {
     }
 
     private void copydtoToEntity(AgendamentoDto dto, Agendamento agendamento) {
-        Cliente cliente = manager.find(Cliente.class, dto.getClienteId());
-        Profissional profissional = manager.find(Profissional.class, dto.getProfissionalId());
-        Servico servico = manager.find(Servico.class, dto.getServicoId());
+        Agendamento a = dto.toModel(manager);
 
         agendamento.setHorario(dto.getHorario());
-        agendamento.setCliente(new Cliente(cliente));
-        agendamento.setProfissional(new Profissional(profissional));
-        agendamento.setServico(new Servico(servico));
+        agendamento.setCliente(a.getCliente());
+        agendamento.setProfissional(a.getProfissional());
+        agendamento.setServico(a.getServico());
     }
 }

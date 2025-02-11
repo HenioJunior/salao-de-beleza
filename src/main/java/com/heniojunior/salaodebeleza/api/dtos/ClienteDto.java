@@ -1,16 +1,15 @@
 package com.heniojunior.salaodebeleza.api.dtos;
 
 import com.heniojunior.salaodebeleza.api.entities.Cliente;
-import jakarta.persistence.EntityManager;
 
-public class ClienteRequest {
+public class ClienteDto {
 
     private String nome;
     private String cpf;
     private String email;
     private String telefone;
 
-    public ClienteRequest(String nome, String cpf, String email, String telefone) {
+    public ClienteDto(String nome, String cpf, String email, String telefone) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;

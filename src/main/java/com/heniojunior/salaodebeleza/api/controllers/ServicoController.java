@@ -1,6 +1,6 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
-import com.heniojunior.salaodebeleza.api.dtos.ServicoRequest;
+import com.heniojunior.salaodebeleza.api.dtos.ServicoDto;
 import com.heniojunior.salaodebeleza.api.entities.Servico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,8 +30,8 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
     @Transactional
-    public ResponseEntity<String> novoServico(@RequestBody ServicoRequest request) {
-        Servico servico = request.toModel();
+    public ResponseEntity<String> novoServico(@RequestBody ServicoDto dto) {
+        Servico servico = dto.toModel();
         manager.persist(servico);
         return ResponseEntity.ok("Servico cadastrado com sucesso.");
     }
@@ -45,9 +45,9 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do servico")
     })
     @Transactional
-    public ResponseEntity<String> atualizaServico(@PathVariable int id, @RequestBody ServicoRequest request) {
+    public ResponseEntity<String> atualizaServico(@PathVariable int id, @RequestBody ServicoDto dto) {
         Servico servico = manager.find(Servico.class, id);
-        copydtoToEntity(request, servico);
+        copydtoToEntity(dto, servico);
         manager.persist(servico);
         return ResponseEntity.ok("Serviço atualizado com sucesso.");
     }
@@ -67,8 +67,8 @@ public class ServicoController {
         return ResponseEntity.noContent().build();
     }
 
-    private void copydtoToEntity(ServicoRequest request, Servico servico) {
-        servico.setTipo(request.getTipo());
-        servico.setValor(request.getValor());
+    private void copydtoToEntity(ServicoDto dto, Servico servico) {
+        servico.setTipo(dto.getTipo());
+        servico.setValor(dto.getValor());
     }
 }
