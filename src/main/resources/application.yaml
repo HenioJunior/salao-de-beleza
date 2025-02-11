@@ -1,0 +1,20 @@
+# Dados de conexao com o banco H2
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  # H2 Client
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  # JPA, SQL
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    show-sql: true
+    properties.hibernate.format_sql: true
+  server: http://localhost:8080/swagger-ui/index.html
+  servlet: /salaodebeleza/api
