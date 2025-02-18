@@ -1,22 +1,23 @@
 package com.heniojunior.salaodebeleza.api.entities;
 
 import com.heniojunior.salaodebeleza.api.enums.TipoServico;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+import java.util.List;
+import java.util.UUID;
+
+@Document(collection = "agendamento")
 public class Servico {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     private double valor;
     private TipoServico tipo;
+    private List<Agendamento> agendamentos;
 
     public Servico(double valor, TipoServico tipo) {
+        this.id = UUID.randomUUID().toString();
         this.valor = valor;
         this.tipo = tipo;
     }
@@ -25,13 +26,7 @@ public class Servico {
 
     }
 
-    public Servico(Servico servico) {
-        this.id = servico.id;
-        this.valor = servico.getValor();
-        this.tipo = servico.getTipo();
-    }
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -49,5 +44,9 @@ public class Servico {
 
     public void setTipo(TipoServico tipo) {
         this.tipo = tipo;
+    }
+
+    public List<Agendamento> getAgendamentos() {
+        return agendamentos;
     }
 }

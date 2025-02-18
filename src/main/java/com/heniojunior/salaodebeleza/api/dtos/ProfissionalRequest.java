@@ -1,36 +1,30 @@
-package com.heniojunior.salaodebeleza.api.entities;
+package com.heniojunior.salaodebeleza.api.dtos;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.heniojunior.salaodebeleza.api.entities.Profissional;
 
-import java.util.List;
-import java.util.UUID;
+public class ProfissionalRequest {
 
-@Document(collection = "agendamento")
-public class Profissional {
-
-    @Id
-    private String id;
     private String nome;
     private String cpf;
     private String email;
     private String telefone;
-    private List<Agendamento> agendamentos;
 
-    public Profissional(String nome, String cpf, String email, String telefone) {
-        this.id = UUID.randomUUID().toString();
+    public ProfissionalRequest(String nome, String cpf, String email, String telefone) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
     }
 
-    public Profissional() {
+    public ProfissionalRequest() {
 
     }
 
-    public String getId() {
-        return id;
+    public ProfissionalRequest(ProfissionalRequest profissional) {
+        this.nome = profissional.getNome();
+        this.cpf = profissional.getCpf();
+        this.email = profissional.getEmail();
+        this.telefone = profissional.getTelefone();
     }
 
     public String getNome() {
@@ -65,7 +59,7 @@ public class Profissional {
         this.telefone = telefone;
     }
 
-    public List<Agendamento> getAgendamentos() {
-        return agendamentos;
+    public Profissional toModel() {
+        return new Profissional(nome, cpf, email, telefone);
     }
 }

@@ -1,23 +1,22 @@
 package com.heniojunior.salaodebeleza.api.entities;
 
 import com.heniojunior.salaodebeleza.api.enums.TipoProduto;
-import com.heniojunior.salaodebeleza.api.enums.TipoServico;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+import java.util.UUID;
+
+@Document(collation = "produto_entity")
 public class Produto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String nome;
     private double valor;
     private TipoProduto tipo;
 
     public Produto(String nome, double valor, TipoProduto tipo) {
+        this.id = UUID.randomUUID().toString();
         this.nome = nome;
         this.valor = valor;
         this.tipo = tipo;
@@ -27,7 +26,7 @@ public class Produto {
 
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

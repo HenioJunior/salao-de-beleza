@@ -3,21 +3,21 @@ package com.heniojunior.salaodebeleza.api.dtos;
 import com.heniojunior.salaodebeleza.api.entities.Servico;
 import com.heniojunior.salaodebeleza.api.enums.TipoServico;
 
-public class ServicoDto {
+public class ServicoRequest {
 
     private double valor;
     private TipoServico tipo;
 
-    public ServicoDto(double valor, TipoServico tipo) {
+    public ServicoRequest(double valor, TipoServico tipo) {
         this.valor = valor;
         this.tipo = tipo;
     }
 
-    public ServicoDto() {
+    public ServicoRequest() {
 
     }
 
-    public ServicoDto(ServicoDto servico) {
+    public ServicoRequest(ServicoRequest servico) {
         this.valor = servico.valor;
         this.tipo = servico.tipo;
     }

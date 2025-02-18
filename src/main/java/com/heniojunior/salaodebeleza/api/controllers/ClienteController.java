@@ -1,25 +1,28 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
-import com.heniojunior.salaodebeleza.api.dtos.ClienteDto;
-import com.heniojunior.salaodebeleza.api.entities.Cliente;
+import com.heniojunior.salaodebeleza.api.dtos.ClienteRequest;
+import com.heniojunior.salaodebeleza.api.dtos.ClienteResponse;
+import com.heniojunior.salaodebeleza.api.services.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/clientes", produces = {"application/json"})
 @Tag(name = "salao-de-beleza")
 public class ClienteController {
 
-    @PersistenceContext
-    private EntityManager manager;
+    @Autowired
+    private ClienteService service;
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Realiza o cadastro de um novo cliente")
@@ -29,11 +32,11 @@ public class ClienteController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
-    @Transactional
-    public ResponseEntity<String> novoCliente(@RequestBody ClienteDto dto) {
-        Cliente cliente = dto.toModel();
-        manager.persist(cliente);
-        return ResponseEntity.ok("Cliente cadastrado com sucesso.");
+    public ResponseEntity<ClienteResponse> novoCliente(@RequestBody ClienteRequest dto) {
+        ClienteResponse response = service.novoCliente(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(response.getId()).toUri();
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -44,12 +47,10 @@ public class ClienteController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do cliente")
     })
-    @Transactional
-    public ResponseEntity<String> atualizaCliente(@PathVariable int id, @RequestBody ClienteDto dto) {
-        Cliente cliente = manager.find(Cliente.class, id);
-        copydtoToEntity(dto, cliente);
-        manager.persist(cliente);
-        return ResponseEntity.ok("Agendamento atualizado com sucesso.");
+
+    public ResponseEntity<ClienteResponse> atualizaCliente(@PathVariable Long id, @RequestBody ClienteRequest request) {
+        ClienteResponse response = service.AtualizaCliente(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -60,17 +61,9 @@ public class ClienteController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao remover o cliente")
     })
-    @Transactional
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Cliente cliente = manager.find(Cliente.class, id);
-        manager.remove(cliente);
-        return ResponseEntity.noContent().build();
-    }
 
-    private void copydtoToEntity(ClienteDto dto, Cliente cliente) {
-        cliente.setNome(dto.getNome());
-        cliente.setCpf(dto.getCpf());
-        cliente.setEmail(dto.getEmail());
-        cliente.setTelefone(dto.getTelefone());
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deletaCliente(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,25 +1,28 @@
 package com.heniojunior.salaodebeleza.api.controllers;
 
-import com.heniojunior.salaodebeleza.api.dtos.ServicoDto;
-import com.heniojunior.salaodebeleza.api.entities.Servico;
+import com.heniojunior.salaodebeleza.api.dtos.ServicoRequest;
+import com.heniojunior.salaodebeleza.api.dtos.ServicoResponse;
+import com.heniojunior.salaodebeleza.api.services.ServicoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/servicos", produces = {"application/json"})
 @Tag(name = "salao-de-beleza")
 public class ServicoController {
 
-    @PersistenceContext
-    private EntityManager manager;
+    @Autowired
+    private ServicoService service;
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Realiza o cadastro de um novo servico")
@@ -29,11 +32,11 @@ public class ServicoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
-    @Transactional
-    public ResponseEntity<String> novoServico(@RequestBody ServicoDto dto) {
-        Servico servico = dto.toModel();
-        manager.persist(servico);
-        return ResponseEntity.ok("Servico cadastrado com sucesso.");
+    public ResponseEntity<ServicoResponse> novoServico(@RequestBody ServicoRequest request) {
+        ServicoResponse response = service.novoServico(request);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(response.getId()).toUri();
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -44,12 +47,9 @@ public class ServicoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do servico")
     })
-    @Transactional
-    public ResponseEntity<String> atualizaServico(@PathVariable int id, @RequestBody ServicoDto dto) {
-        Servico servico = manager.find(Servico.class, id);
-        copydtoToEntity(dto, servico);
-        manager.persist(servico);
-        return ResponseEntity.ok("Serviço atualizado com sucesso.");
+    public ResponseEntity<ServicoResponse> atualizaServico(@PathVariable Long id, @RequestBody ServicoRequest request) {
+        ServicoResponse response = service.atualizaServico(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -60,15 +60,8 @@ public class ServicoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao remover o servico")
     })
-    @Transactional
     public ResponseEntity<Void> deletaServico(@PathVariable Long id) {
-        Servico servico = manager.find(Servico.class, id);
-        manager.remove(servico);
+        service.deletaServico(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private void copydtoToEntity(ServicoDto dto, Servico servico) {
-        servico.setTipo(dto.getTipo());
-        servico.setValor(dto.getValor());
     }
 }

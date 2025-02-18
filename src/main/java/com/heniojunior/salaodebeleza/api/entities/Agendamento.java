@@ -1,40 +1,32 @@
 package com.heniojunior.salaodebeleza.api.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Entity
+@Document
 public class Agendamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     @JsonFormat(pattern = "dd-MM-yyyy@HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime horario;
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name="profissional_id")
-    private Profissional profissional;
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name="cliente_id")
     private Cliente cliente;
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name="servico_id")
+    private Profissional profissional;
     private Servico servico;
 
-    public Agendamento(LocalDateTime horario, Profissional profissional, Cliente cliente, Servico servico) {
+    public Agendamento(LocalDateTime horario, Cliente cliente, Profissional profissional, Servico servico) {
+        this.id = UUID.randomUUID().toString();
         this.horario = horario;
-        this.profissional = profissional;
         this.cliente = cliente;
+        this.profissional = profissional;
         this.servico = servico;
     }
 
-    public Agendamento() {
-
-    }
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -46,20 +38,20 @@ public class Agendamento {
         this.horario = horario;
     }
 
-    public Profissional getProfissional() {
-        return profissional;
-    }
-
-    public void setProfissional(Profissional profissional) {
-        this.profissional = profissional;
-    }
-
     public Cliente getCliente() {
         return cliente;
     }
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Profissional getProfissional() {
+        return profissional;
+    }
+
+    public void setProfissional(Profissional profissional) {
+        this.profissional = profissional;
     }
 
     public Servico getServico() {

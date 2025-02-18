@@ -6,9 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "salao-de-beleza")
 public class ProdutoController {
 
-    @PersistenceContext
-    private EntityManager manager;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Realiza o cadastro de um novo produto")
@@ -29,13 +24,9 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
-    @Transactional
     public ResponseEntity<String> novoProduto(@RequestBody ProdutoDto dto) {
-        Produto produto = dto.toModel();
-        manager.persist(produto);
-        return ResponseEntity.ok("produto cadastrado com sucesso.");
+       return ResponseEntity.ok("produto cadastrado com sucesso.");
     }
-
     @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Modifica o cadastro de um produto existente")
     @ApiResponses(value = {
@@ -44,11 +35,9 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do produto")
     })
-    @Transactional
+
     public ResponseEntity<String> atualizaproduto(@PathVariable int id, @RequestBody ProdutoDto dto) {
-        Produto produto = manager.find(Produto.class, id);
-        copydtoToEntity(dto, produto);
-        manager.persist(produto);
+
         return ResponseEntity.ok("Produto atualizado com sucesso.");
     }
 
@@ -60,10 +49,8 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao remover o produto")
     })
-    @Transactional
     public ResponseEntity<Void> deletaproduto(@PathVariable Long id) {
-        Produto produto = manager.find(Produto.class, id);
-        manager.remove(produto);
+
         return ResponseEntity.noContent().build();
     }
 

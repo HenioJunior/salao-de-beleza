@@ -1,23 +1,25 @@
 package com.heniojunior.salaodebeleza.api.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
-@Entity
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
+import java.util.UUID;
+
+@Document(collection = "agendamento")
 public class Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     private String nome;
     private String cpf;
     private String email;
     private String telefone;
+    private List<Agendamento> agendamentos;
 
     public Cliente(String nome, String cpf, String email, String telefone) {
+        this.id = UUID.randomUUID().toString();
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
@@ -36,7 +38,7 @@ public class Cliente {
         this.telefone = cliente.getTelefone();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -70,5 +72,9 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public List<Agendamento> getAgendamentos() {
+        return agendamentos;
     }
 }
