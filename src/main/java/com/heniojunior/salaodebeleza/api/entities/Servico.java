@@ -4,7 +4,6 @@ import com.heniojunior.salaodebeleza.api.enums.TipoServico;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.UUID;
 
 @Document(collection = "agendamento")
@@ -14,7 +13,6 @@ public class Servico {
     private String id;
     private double valor;
     private TipoServico tipo;
-    private List<Agendamento> agendamentos;
 
     public Servico(double valor, TipoServico tipo) {
         this.id = UUID.randomUUID().toString();
@@ -44,9 +42,5 @@ public class Servico {
 
     public void setTipo(TipoServico tipo) {
         this.tipo = tipo;
-    }
-
-    public List<Agendamento> getAgendamentos() {
-        return agendamentos;
     }
 }

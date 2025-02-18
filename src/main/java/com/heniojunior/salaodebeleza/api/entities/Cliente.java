@@ -4,7 +4,6 @@ package com.heniojunior.salaodebeleza.api.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.UUID;
 
 @Document(collection = "agendamento")
@@ -16,7 +15,6 @@ public class Cliente {
     private String cpf;
     private String email;
     private String telefone;
-    private List<Agendamento> agendamentos;
 
     public Cliente(String nome, String cpf, String email, String telefone) {
         this.id = UUID.randomUUID().toString();
@@ -28,14 +26,6 @@ public class Cliente {
 
     public Cliente() {
 
-    }
-
-    public Cliente(Cliente cliente) {
-        this.id = cliente.getId();
-        this.nome = cliente.getNome();
-        this.cpf = cliente.getCpf();
-        this.email = cliente.getEmail();
-        this.telefone = cliente.getTelefone();
     }
 
     public String getId() {
@@ -72,9 +62,5 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public List<Agendamento> getAgendamentos() {
-        return agendamentos;
     }
 }
