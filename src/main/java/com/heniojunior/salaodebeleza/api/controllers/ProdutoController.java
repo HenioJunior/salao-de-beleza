@@ -19,7 +19,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/produtos", produces = {"application/json"})
-@Tag(name = "salao-de-beleza")
+@Tag(name = "Produto")
 public class ProdutoController {
 
     @Autowired

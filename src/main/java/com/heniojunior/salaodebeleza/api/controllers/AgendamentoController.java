@@ -21,7 +21,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/agendamentos", produces = {"application/json"})
-@Tag(name = "salao-de-beleza")
+@Tag(name = "Agendamento de Serviços")
 public class AgendamentoController {
 
     @Autowired

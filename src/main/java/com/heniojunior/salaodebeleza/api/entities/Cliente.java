@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
-@Document(collection = "agendamento")
+@Document(collection = "clientes")
 public class Cliente {
 
     @Id
