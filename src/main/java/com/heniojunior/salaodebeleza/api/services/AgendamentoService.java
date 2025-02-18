@@ -2,17 +2,18 @@ package com.heniojunior.salaodebeleza.api.services;
 
 import com.heniojunior.salaodebeleza.api.dtos.AgendamentoRequest;
 import com.heniojunior.salaodebeleza.api.dtos.AgendamentoResponse;
-import com.heniojunior.salaodebeleza.api.entities.Agendamento;
-import com.heniojunior.salaodebeleza.api.entities.Cliente;
-import com.heniojunior.salaodebeleza.api.entities.Profissional;
-import com.heniojunior.salaodebeleza.api.entities.Servico;
+import com.heniojunior.salaodebeleza.api.dtos.ProdutoResponse;
+import com.heniojunior.salaodebeleza.api.entities.*;
 import com.heniojunior.salaodebeleza.api.repositories.AgendamentoRepository;
 import com.heniojunior.salaodebeleza.api.repositories.ClienteRepository;
 import com.heniojunior.salaodebeleza.api.repositories.ProfissionalRepository;
 import com.heniojunior.salaodebeleza.api.repositories.ServicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AgendamentoService {
@@ -28,6 +29,18 @@ public class AgendamentoService {
     private ServicoRepository servicoRepository;
 
 
+    @Transactional(readOnly = true)
+    public AgendamentoResponse buscaPorId(String id) {
+        Agendamento agendamento = agendamentoRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Recurso não encontrado"));
+        return new AgendamentoResponse(agendamento);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AgendamentoResponse> buscaTodos(Pageable pageable) {
+        Page<Agendamento> result = agendamentoRepository.findAll(pageable);
+        return result.map(AgendamentoResponse::new);
+    }
 
     public AgendamentoResponse novoAgendamento(AgendamentoRequest request) {
         Cliente cliente = getCliente(request.getClienteId());
@@ -41,7 +54,7 @@ public class AgendamentoService {
     }
 
     public AgendamentoResponse atualizaAgendamento(String id, AgendamentoRequest request) {
-        Agendamento agendamento = agendamentoRepository.findById(id.toString())
+        Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Agendamento não localizado"));
         agendamento.setHorario(request.getHorario());
         agendamento.setCliente(getCliente(request.getClienteId()));
@@ -51,12 +64,12 @@ public class AgendamentoService {
         return new AgendamentoResponse(agendamento);
     }
 
-    public void deletaAgendamento(Long id) {
-        if(!agendamentoRepository.existsById(id.toString())) {
+    public void deletaAgendamento(String id) {
+        if(!agendamentoRepository.existsById(id)) {
             throw new RuntimeException("Recurso não encontrado");
         }
         try {
-            agendamentoRepository.deleteById(id.toString());
+            agendamentoRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("Falha de integridade referencial");
         }

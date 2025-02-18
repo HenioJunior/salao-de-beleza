@@ -1,29 +1,18 @@
-package com.heniojunior.salaodebeleza.api.entities;
+package com.heniojunior.salaodebeleza.api.dtos;
 
 import com.heniojunior.salaodebeleza.api.enums.TipoProduto;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.UUID;
+public class ProdutoRequest {
 
-@Document(collection = "produto")
-public class Produto {
-
-    @Id
     private String id;
     private String nome;
     private double valor;
     private TipoProduto tipo;
 
-    public Produto(String nome, double valor, TipoProduto tipo) {
-        this.id = UUID.randomUUID().toString();
+    public ProdutoRequest(String nome, double valor, TipoProduto tipo) {
         this.nome = nome;
         this.valor = valor;
         this.tipo = tipo;
-    }
-
-    public Produto() {
-
     }
 
     public String getId() {

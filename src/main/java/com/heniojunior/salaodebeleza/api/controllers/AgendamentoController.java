@@ -2,6 +2,7 @@ package com.heniojunior.salaodebeleza.api.controllers;
 
 import com.heniojunior.salaodebeleza.api.dtos.AgendamentoRequest;
 import com.heniojunior.salaodebeleza.api.dtos.AgendamentoResponse;
+import com.heniojunior.salaodebeleza.api.dtos.ProdutoResponse;
 import com.heniojunior.salaodebeleza.api.entities.Agendamento;
 import com.heniojunior.salaodebeleza.api.services.AgendamentoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,27 @@ public class AgendamentoController {
     @Autowired
     private AgendamentoService service;
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Realiza a busca de um agendamento por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+
+    })
+    public ResponseEntity<AgendamentoResponse> findById(@PathVariable String id) {
+        AgendamentoResponse response =  service.buscaPorId(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "Realiza a busca de todos os agendamentos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ok"),
+
+    })
+    public ResponseEntity<Page<AgendamentoResponse>>  findAll(Pageable pageable) {
+        Page<AgendamentoResponse> response =  service.buscaTodos(pageable);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Realiza um novo agendamento de serviço")
@@ -55,7 +79,7 @@ public class AgendamentoController {
         return ResponseEntity.created(uri).body(response);
     }
 
-    @DeleteMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = {"/{id}"})
     @Operation(summary = "Remove um agendamento existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Agendamento removido com sucesso"),
@@ -63,7 +87,7 @@ public class AgendamentoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao remover o agendamento")
     })
-    public ResponseEntity<Void> deletaAgendamento(@PathVariable Long id) {
+    public ResponseEntity<Void> deletaAgendamento(@PathVariable String id) {
         service.deletaAgendamento(id);
         return ResponseEntity.noContent().build();
     }

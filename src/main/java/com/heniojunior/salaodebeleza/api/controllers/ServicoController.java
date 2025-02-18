@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,27 @@ public class ServicoController {
     @Autowired
     private ServicoService service;
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Realiza a busca de um serviço por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+
+    })
+    public ResponseEntity<ServicoResponse> findById(@PathVariable String id) {
+        ServicoResponse response =  service.buscaPorId(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "Realiza a busca de todos serviços")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ok"),
+
+    })
+    public ResponseEntity<Page<ServicoResponse>>  findAll(Pageable pageable) {
+        Page<ServicoResponse> response =  service.buscaTodos(pageable);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Realiza o cadastro de um novo servico")
@@ -47,12 +70,12 @@ public class ServicoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do servico")
     })
-    public ResponseEntity<ServicoResponse> atualizaServico(@PathVariable Long id, @RequestBody ServicoRequest request) {
+    public ResponseEntity<ServicoResponse> atualizaServico(@PathVariable String id, @RequestBody ServicoRequest request) {
         ServicoResponse response = service.atualizaServico(id, request);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = {"/{id}"})
     @Operation(summary = "Remove um servico existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Servico removido com sucesso"),
@@ -60,7 +83,7 @@ public class ServicoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao remover o servico")
     })
-    public ResponseEntity<Void> deletaServico(@PathVariable Long id) {
+    public ResponseEntity<Void> deletaServico(@PathVariable String id) {
         service.deletaServico(id);
         return ResponseEntity.noContent().build();
     }

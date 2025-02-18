@@ -3,20 +3,21 @@ package com.heniojunior.salaodebeleza.api.dtos;
 import com.heniojunior.salaodebeleza.api.entities.Produto;
 import com.heniojunior.salaodebeleza.api.enums.TipoProduto;
 
-public class ProdutoDto {
+public class ProdutoResponse {
 
-    private Long id;
+    private String id;
     private String nome;
     private double valor;
     private TipoProduto tipo;
 
-    public ProdutoDto(String nome, double valor, TipoProduto tipo) {
-        this.nome = nome;
-        this.valor = valor;
-        this.tipo = tipo;
+    public ProdutoResponse(Produto produto) {
+        this.id = produto.getId();
+        this.nome = produto.getNome();
+        this.valor = produto.getValor();
+        this.tipo = produto.getTipo();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
