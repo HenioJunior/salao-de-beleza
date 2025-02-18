@@ -1,0 +1,6 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://heniojr:spring123@cluster0.xogar.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: salaobelezadb
+      auto-index-creation: true
